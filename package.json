@@ -2,10 +2,13 @@
   "name": "school_website_complete",
   "version": "1.0.0",
   "description": "",
-  "main": "backend.js",
+  "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
