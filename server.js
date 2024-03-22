@@ -3,11 +3,14 @@ import fs from 'fs';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { config } from 'dotenv';
+import mongoose from 'mongoose';
+import multer from 'multer';
+import Event from "./models/eventDB.js"
 
-// config(); // Load environment variables from .env file
+config(); // Load environment variables from .env file
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.set('view engine', 'ejs');
@@ -15,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 bodyParser.urlencoded({ extended: true })
+
 // Load emails from JSON file on server start
 let emails = [];
 try {
@@ -28,7 +32,8 @@ function getEmail(req, res, next) {
     let input_value = req.body.Email;
     // console.log(input_value);
     next();
-}
+};
+
 app.use(getEmail);
 
 app.get('/', (req, res) => {
@@ -37,6 +42,9 @@ app.get('/', (req, res) => {
 
 app.get('/events', (req, res) => {
     res.render('events');
+});
+app.get('/about', (req, res) => {
+    res.render('about');
 });
 
 app.post('/subscribe', (req, res) => {
@@ -51,13 +59,38 @@ app.post('/subscribe', (req, res) => {
     res.send('Subscription successful!');
 });
 
+app.get('/login', (req, res) => {
+    res.render("login");
+});
 app.get('/admin', (req, res) => {
-    res.render('admin', { emails });
+    res.render("admin");
 });
+// Add event route
+app.get('/addEvent', (req, res) => {
+    res.render('addEvent');
+  });
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+// Delete event route
+app.get('/delete/:eventId', (req, res) => {
+    const eventId = req.params.eventId; 
+    Event.findByIdAndRemove(eventId, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect('/admin');
+      }
+    });
+  });
+  
+
+app.post("/login",(req,res) =>{
+    if ( req.body["username"] === process.env.USERNAME || req.body["password"] === process.env.PASSWORD){
+        res.render("admin")        
+
+    }else{
+        res.render("login")
+    }
+})
 
 // Function to save emails to JSON file
 function saveEmailsToJson() {
@@ -69,4 +102,64 @@ function saveEmailsToJson() {
         }
     });
 }
+
+
+// Connect to MongoDB
+const start = async() => {
+    try {
+        await mongoose.connect(process.env.MONGODB, {
+        }).then(() => console.log("connected"))
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    }
+    catch(e){
+        console.log(e.message)
+    }
+}
+start()
+
+
+
+
+
+
+
+// Set up multer for file uploads
+const upload = multer({ dest: 'uploads/' });
+
+// Routes
+app.get('/admin', (req, res) => {
+  // Fetch all events from the database
+  Event.find({}, (err, events) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render('admin', { events: events });
+    }
+  });
+});
+
+
+
+app.post('/addEvent', upload.single('eventImage'), (req, res) => {
+  const { title, description, date } = req.body;
+  const image = req.file ? req.file.filename : ''; // Store the uploaded image filename
+
+  const newEvent = new Event({
+    title: title,
+    description: description,
+    date: date,
+    image: image,
+  });
+
+  newEvent.save((err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect('/admin');
+    }
+  });
+});
+
 

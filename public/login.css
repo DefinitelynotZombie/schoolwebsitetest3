@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    min-height: 100vh;
+    font-family: "Work Sans", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    font-weight: 400;
+    background-image: url("/pictures/bg_colors _2.webp");
+}
+main{
+    display: flex;
+    justify-content: center;
+}
+form{
+    width: 18.75rem;
+    height: 25rem;
+}

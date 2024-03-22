@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Check if the element is in the viewport and below the trigger height
             if (elementTop - triggerHeight < 0) {
                 // Calculate staggered delay based on index
-                var delay = index * 90; // Adjust the delay as needed
+                var delay = index * 30; // Adjust the delay as needed
 
                 // Apply the delay using CSS style
                 element.style.transitionDelay = delay + 'ms';

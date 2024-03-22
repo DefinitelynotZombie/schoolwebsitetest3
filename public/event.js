@@ -40,6 +40,39 @@ function closeBar(){
 document.querySelector(".first-bar").addEventListener("click",sideBar)
 document.querySelector(".second-bar").addEventListener("click",closeBar)
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Get all elements with the class 'fade-in-up'
+    var fadeElements = document.querySelectorAll('.fade-in-up');
+
+    function fadeInElements() {
+        var triggerHeight = window.innerHeight * 0.95; // Adjust the percentage as needed
+
+        fadeElements.forEach(function (element, index) {
+            // Calculate the distance of the element from the top of the viewport
+            var elementTop = element.getBoundingClientRect().top;
+
+            // Check if the element is in the viewport and below the trigger height
+            if (elementTop - triggerHeight < 0) {
+                // Calculate staggered delay based on index
+                var delay = index * 30; // Adjust the delay as needed
+
+                // Apply the delay using CSS style
+                element.style.transitionDelay = delay + 'ms';
+
+                // Add the 'fade-in' class after the delay
+                element.classList.add('fade-in');
+            }
+        });
+    }
+
+    // Attach the fadeInElements function to the scroll event
+    window.addEventListener('scroll', fadeInElements);
+
+    // Trigger the fadeInElements function on page load
+    fadeInElements();
+});
+
 const all_button = document.querySelectorAll(".event-button")
 document.addEventListener('click', function(event) {
     // Check if the clicked element is a button with the specified class
