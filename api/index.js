@@ -69,25 +69,25 @@ app.post('/subscribe', (req, res) => {
 app.get('/login', (req, res) => {
     res.render("login");
 });
-app.get('/admin', (req, res) => {
-    res.render("admin");
-});
+// app.get('/admin', (req, res) => {
+//     res.render("admin");
+// });
 // Add event route
-app.get('/addEvent', (req, res) => {
-    res.render('addEvent');
-  });
+// app.get('/addEvent', (req, res) => {
+//     res.render('addEvent');
+//   });
 
 // Delete event route
-app.get('/delete/:eventId', (req, res) => {
-    const eventId = req.params.eventId; 
-    Event.findByIdAndRemove(eventId, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.redirect('/admin');
-      }
-    });
-  });
+// app.get('/delete/:eventId', (req, res) => {
+//     const eventId = req.params.eventId; 
+//     Event.findByIdAndRemove(eventId, (err) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         res.redirect('/admin');
+//       }
+//     });
+//   });
   
 
 app.post("/login",(req,res) =>{
@@ -110,61 +110,65 @@ function saveEmailsToJson() {
     });
 }
 
-
-// Connect to MongoDB
-const start = async() => {
-    try {
-        await mongoose.connect(process.env.MONGODB, {
-        }).then(() => console.log("connected"))
         app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
         });
-    }
-    catch(e){
-        console.log(e.message)
-    }
-}
-start()
+
+
+// Connect to MongoDB
+// const start = async() => {
+//     try {
+//         await mongoose.connect(process.env.MONGODB, {
+//         }).then(() => console.log("connected"))
+//         app.listen(port, () => {
+//             console.log(`Server is running on port ${port}`);
+//         });
+//     }
+//     catch(e){
+//         console.log(e.message)
+//     }
+// }
+// start()
 
 
 
 
 
 // Set up multer for file uploads
-const upload = multer({ dest: 'uploads/' });
+// const upload = multer({ dest: 'uploads/' });
 
 // Routes
-app.get('/admin', (req, res) => {
-  // Fetch all events from the database
-  Event.find({}, (err, events) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render('admin', { events: events });
-    }
-  });
-});
+// app.get('/admin', (req, res) => {
+//   // Fetch all events from the database
+//   Event.find({}, (err, events) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.render('admin', { events: events });
+//     }
+//   });
+// });
 
 
 
-app.post('/addEvent', upload.single('eventImage'), (req, res) => {
-  const { title, description, date } = req.body;
-  const image = req.file ? req.file.filename : ''; // Store the uploaded image filename
+// app.post('/addEvent', upload.single('eventImage'), (req, res) => {
+//   const { title, description, date } = req.body;
+//   const image = req.file ? req.file.filename : '';
 
-  const newEvent = new Event({
-    title: title,
-    description: description,
-    date: date,
-    image: image,
-  });
+//   const newEvent = new Event({
+//     title: title,
+//     description: description,
+//     date: date,
+//     image: image,
+//   });
 
-  newEvent.save((err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.redirect('/admin');
-    }
-  });
-});
+//   newEvent.save((err) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.redirect('/admin');
+//     }
+//   });
+// });
 
 
