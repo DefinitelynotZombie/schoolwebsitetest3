@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const eventSchema = new mongoose.Schema({
     title: String,
     description: String,
-    date: Date,
+    date: Date  ,
     image: String, // Add image field to store image URLs
   });
 
